@@ -17,7 +17,26 @@ app.use((req, res, next) => {
 });
 
 app.get('/health', (req, res) => {
-  res.json({ ok: true, service: 'boujee-peach-render-service', version: '009' });
+  res.json({ ok: true, service: 'boujee-peach-render-service', version: '011' });
+});
+
+app.get('/health/render', async (req, res) => {
+  try {
+    const { chromium } = await import('playwright');
+    const browser = await chromium.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+    });
+    await browser.close();
+    res.json({ ok: true, service: 'boujee-peach-render-service', browser: 'chromium', version: '011' });
+  } catch (error) {
+    res.status(503).json({
+      ok: false,
+      error: 'Chromium health check failed.',
+      details: error?.message || String(error),
+      fix: 'Deploy this renderer as Docker on Render using render-service/Dockerfile. The official Playwright image includes Chromium system dependencies.',
+    });
+  }
 });
 
 app.post('/render-feed', (req, res) => {
@@ -42,7 +61,7 @@ app.post('/render-feed', (req, res) => {
     let data = null;
     try { data = JSON.parse(raw); } catch {}
     if (code !== 0 || !data) {
-      return res.status(503).json({ error: data?.error || 'Headless render failed.', details: data?.details || raw.slice(0, 900) });
+      return res.status(503).json({ error: data?.error || 'Headless render failed.', details: data?.details || raw.slice(0, 1800), exitCode: code });
     }
     res.json(data);
   });

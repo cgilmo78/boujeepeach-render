@@ -34,10 +34,20 @@ function hostType(url) {
   }
 }
 
-const browser = await chromium.launch({
-  headless: true,
-  args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
-});
+let browser;
+try {
+  browser = await chromium.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+  });
+} catch (error) {
+  console.error(JSON.stringify({
+    error: 'Chromium could not launch on the render service.',
+    details: error?.message || String(error),
+    fix: 'Deploy this renderer as Docker on Render using render-service/Dockerfile. The official Playwright image includes Chromium system dependencies.',
+  }));
+  process.exit(4);
+}
 
 try {
   const page = await browser.newPage({
@@ -49,8 +59,8 @@ try {
     'accept-language': 'en-US,en;q=0.9',
   });
   await page.goto(sourceUrl, { waitUntil: 'domcontentloaded', timeout: 45000 });
-  await page.waitForTimeout(2500);
-  for (let i = 0; i < 5; i += 1) {
+  await page.waitForTimeout(5000);
+  for (let i = 0; i < 8; i += 1) {
     await page.mouse.wheel(0, 1200);
     await page.waitForTimeout(900);
   }
@@ -143,8 +153,8 @@ try {
     ...result,
   }));
 } catch (error) {
-  console.error(JSON.stringify({ error: error.message || String(error), details: 'Headless render failed.' }));
+  console.error(JSON.stringify({ error: 'Headless render failed.', details: error?.message || String(error) }));
   process.exit(1);
 } finally {
-  await browser.close().catch(() => {});
+  if (browser) await browser.close().catch(() => {});
 }

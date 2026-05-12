@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: boujeepeach-render
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health/render
