@@ -1,6 +1,6 @@
 # Boujee Peach renderer: Docker deploy for Render.com
 # Uses the official Playwright image so Chromium and system dependencies are preinstalled.
-FROM mcr.microsoft.com/playwright:v1.60.0-jammy
+FROM mcr.microsoft.com/playwright:v1.49.0-jammy
 
 WORKDIR /app
 ENV NODE_ENV=production

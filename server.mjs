@@ -17,7 +17,7 @@ app.use((req, res, next) => {
 });
 
 app.get('/health', (req, res) => {
-  res.json({ ok: true, service: 'boujee-peach-render-service', version: '011' });
+  res.json({ ok: true, service: 'boujee-peach-render-service', version: '012' });
 });
 
 app.get('/health/render', async (req, res) => {
@@ -28,7 +28,7 @@ app.get('/health/render', async (req, res) => {
       args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
     });
     await browser.close();
-    res.json({ ok: true, service: 'boujee-peach-render-service', browser: 'chromium', version: '011' });
+    res.json({ ok: true, service: 'boujee-peach-render-service', browser: 'chromium', version: '012' });
   } catch (error) {
     res.status(503).json({
       ok: false,

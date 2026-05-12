@@ -58,3 +58,17 @@ npm start
 ```
 
 Then test `http://localhost:3001/health/render`.
+
+
+## v012 extraction notes
+
+This version adds marketplace-aware rendered extraction:
+
+- Temu detail-link detection for `-g-` and goods/product URLs
+- AliExpress/SHEIN selector families
+- image-centered card discovery for JS-heavy grids
+- autoscroll hydration before extraction
+- card scoring and duplicate removal
+- debug counts for rendered images, product-like links, and extractor used
+
+If a marketplace renders but returns too few cards, confirm the page is not showing CAPTCHA/verification, then tune the selector family in `feed-renderer.mjs`.

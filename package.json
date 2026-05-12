@@ -10,5 +10,6 @@
   "dependencies": {
     "express": "^4.19.2",
     "playwright": "^1.49.0"
-  }
+  },
+  "version": "0.1.2"
 }
